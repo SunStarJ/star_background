@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -45,9 +46,10 @@ class _MyHomePageState extends State<MyHomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: StarBackground(
+              floatChild: UfoFront(offset: offset),
               height: double.infinity,
               width: double.infinity,
-              starCount: 100,
+              starCount: 200,
               onHover: (event) {
                 setState(() {
                   offset = event.localPosition;
@@ -57,15 +59,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              const Text(
-                "Welcome to the SPACE",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Welcome to the SPACE",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
             constraints: const BoxConstraints(
               maxWidth: 500,
             ),
@@ -73,7 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.white.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(10)),
           ),
-          UfoFront(offset: offset)
         ],
       ),
     ));
