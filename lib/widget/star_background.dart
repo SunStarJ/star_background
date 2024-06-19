@@ -1,20 +1,25 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class StarBackground extends StatelessWidget {
   final double height;
   final double width;
   final int starCount;
   final double starSize;
+  PointerExitEventListener? onExit;
+  PointerHoverEventListener? onHover;
 
   @override
-  const StarBackground(
+  StarBackground(
       {super.key,
       this.height = 200,
       this.width = 200,
       this.starCount = 200,
-      this.starSize = 2});
+      this.starSize = 2,
+      this.onExit,
+      this.onHover});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +32,8 @@ class StarBackground extends StatelessWidget {
           width: constraints.maxWidth,
           starCount: starCount,
           starSize: starSize,
+          onExit: onExit,
+          onHover: onHover,
         );
       }),
     );
@@ -38,13 +45,17 @@ class _StarBackgroundState extends StatefulWidget {
   final double width;
   final int starCount;
   final double starSize;
+  final PointerExitEventListener? onExit;
+  final PointerHoverEventListener? onHover;
 
   const _StarBackgroundState(
       {super.key,
       this.height = 200,
       this.width = 200,
       this.starCount = 200,
-      this.starSize = 2});
+      this.starSize = 2,
+      this.onExit,
+      this.onHover});
 
   @override
   State<_StarBackgroundState> createState() => _StarBackgroundStateState();
@@ -75,7 +86,8 @@ class _StarBackgroundStateState extends State<_StarBackgroundState>
         duration: const Duration(milliseconds: 500))
       ..addListener(() {
         setState(() {
-          tailLength = recordTailLength - recordTailLength * animationController.value;
+          tailLength =
+              recordTailLength - recordTailLength * animationController.value;
         });
       })
       ..addStatusListener((status) {
@@ -98,6 +110,9 @@ class _StarBackgroundStateState extends State<_StarBackgroundState>
         recordAngle = angle;
         recordTailLength = tailLength;
         animationController.forward();
+        if (widget.onExit != null) {
+          widget.onExit!(event);
+        }
       },
       onHover: (event) {
         setState(() {
@@ -112,8 +127,10 @@ class _StarBackgroundStateState extends State<_StarBackgroundState>
             tailLength = distance;
             this.angle = angle;
           });
-          print("check distance $distance , dx $dx , dy $dy ");
         });
+        if (widget.onHover != null) {
+          widget.onHover!(event);
+        }
       },
       child: CustomPaint(
         painter: _StarPainter(
